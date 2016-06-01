@@ -99,11 +99,10 @@ func redisGet(w http.ResponseWriter, r *http.Request) {
     vars := mux.Vars(r)
 	key := vars["key"]
     
-    log.Println("Fetching from redis with key:")
-    log.Printf(key)
+    log.Printf("Fetching from redis with key: %s \n", key)
     
     m := redisModel{}
-    err := redis.Get(key, m)
+    err := redis.Get(key, &m)
     
     if err != nil {
         log.Println(err)
