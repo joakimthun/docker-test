@@ -20,7 +20,7 @@ func init() {
 		MaxActive: 15,
         IdleTimeout: 240 * time.Second,
         Dial: func () (redis.Conn, error) {
-            c, err := redis.Dial("tcp", "")
+            c, err := redis.Dial("tcp", "redis:6379")
             
             if err != nil {
                 log.Fatal(err)
