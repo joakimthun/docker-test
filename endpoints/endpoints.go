@@ -9,7 +9,10 @@ import (
     "github.com/gorilla/schema"
     "github.com/joakimthun/docker-test/db"
     "github.com/joakimthun/docker-test/redis"
+    "fmt"
 )
+
+var http_requests_total_index int = 0
 
 func init() {
     log.Println("Endpoints init")
@@ -17,6 +20,7 @@ func init() {
     r := mux.NewRouter()
     
     r.HandleFunc("/", func (w http.ResponseWriter, r *http.Request) {
+        http_requests_total_index += 1
         writeHTML(w, r, getView("views/index"))
     }).Methods("GET")
     
@@ -35,6 +39,7 @@ func init() {
     }).Methods("GET")
     
     r.HandleFunc("/redisset", redisSet).Methods("POST")
+    r.HandleFunc("/metrics", prometheusMetrics).Methods("GET")    
     
     http.Handle("/", r)
 }
@@ -103,6 +108,10 @@ func redisGet(w http.ResponseWriter, r *http.Request) {
     }
     
     writeJSON(w, m)
+}
+
+func prometheusMetrics(w http.ResponseWriter, r *http.Request) {
+     fmt.Fprintf(w, "# HELP http_requests_total_index Total number of http requests made to the index page\n# TYPE http_requests_total_index COUNTER\nhttp_requests_total_index %v\n", http_requests_total_index)
 }
 
 func redisSet(w http.ResponseWriter, r *http.Request) {
