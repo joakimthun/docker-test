@@ -1,0 +1,39 @@
+version: '2'
+services:
+  web:
+    image: docker-test-web
+    depends_on:
+      - redis
+      - db
+    ports:
+      - 8080:8080
+    links:
+      - redis
+      - db
+  redis:
+    image: redis
+  db:
+    image: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data/pgdata
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+  prometheus:
+    command:
+      ["-config.file=/config/prometheus.yml",
+      "-storage.local.path=/datastore"]
+    image: prom/prometheus
+    ports:
+      - 9090:9090
+    links:
+      - web
+    volumes:
+      - prometheusdata:/datastore
+      - /c/Users/docker-test/prometheus.yml:/config/prometheus.yml
+volumes:
+  pgdata:
+    driver: local
+  prometheusdata:
+    driver: local
