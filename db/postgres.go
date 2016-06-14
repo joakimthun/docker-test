@@ -12,20 +12,19 @@ var (
 func init() {
     log.Println("Postgres init")
     
-    // var err error
-    // db, err = gorm.Open("postgres", "")  
+    var err error
+    db, err = gorm.Open("postgres", "db:5432")
     
-    // if err != nil {
-    //     log.Fatal(err)
-    // }
+    if err != nil {
+        log.Fatal(err)
+    }
     
-    // db.DB().SetMaxIdleConns(20)
-    // db.DB().SetMaxOpenConns(20)  
+    db.DB().SetMaxIdleConns(20)
+    db.DB().SetMaxOpenConns(20)
 }
 
 func Create(e interface{}) error {
-    return nil
-    //return db.Create(e).Error
+    return db.Create(e).Error
 }
 
 type User struct {
@@ -35,20 +34,20 @@ type User struct {
 }
 
 func Users() ([]User, error) {
-	// var users []User
-	// err := db.Order("name asc").Find(&users).Error
+	var users []User
+	err := db.Order("name asc").Find(&users).Error
 
-	// if err != nil {
-	// 	return nil, err
-	// }
+	if err != nil {
+		return nil, err
+	}
 
-	// return users, nil
+	return users, nil
     
-    return []User{
-        User { Id: 1, Name: "Name1", Email: "email1@gmail.com"},
-        User { Id: 2, Name: "Name2", Email: "email2@gmail.com"},
-        User { Id: 3, Name: "Name3", Email: "email3@gmail.com"},
-        User { Id: 4, Name: "Name4", Email: "email4@gmail.com"},
-    }, nil
+    // return []User{
+    //     User { Id: 1, Name: "Name1", Email: "email1@gmail.com"},
+    //     User { Id: 2, Name: "Name2", Email: "email2@gmail.com"},
+    //     User { Id: 3, Name: "Name3", Email: "email3@gmail.com"},
+    //     User { Id: 4, Name: "Name4", Email: "email4@gmail.com"},
+    // }, nil
 }
 
