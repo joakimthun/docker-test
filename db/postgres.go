@@ -13,7 +13,7 @@ func init() {
     log.Println("Postgres init")
     
     var err error
-    db, err = gorm.Open("postgres", "db:5432")
+    db, err = gorm.Open("postgres", "postgres://postgres@db/postgres")
     
     if err != nil {
         log.Fatal(err)
